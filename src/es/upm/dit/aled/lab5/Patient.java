@@ -164,7 +164,16 @@ public class Patient extends Thread {
 	 */
 	@Override
 	public void run() {
-		// TODO
+		location.enter(this); // Entro a la primera localización
+		attendedAtLocation(); // Soy atendido en la primera localización
+		location.exit(this); // Salgo de la primera localización
+		for(Transfer t: protocol) {
+			advanceProtocol(); // Avanza a la siguiente localización
+			location.enter(this); // Intenta entrar a la siguiente localización
+			attendedAtLocation(); // Es atendido en la localización
+			location.exit(this); // El método advanceProtocol ya me cambia el location, me voy de mi location
+		}
+		EmergencyRoomGUI.getInstance().removePatient(this);
 	}
 
 }
